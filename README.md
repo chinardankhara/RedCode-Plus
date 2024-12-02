@@ -1,4 +1,4 @@
-<h1 align="center"><img src="assets/RedCode-logo-512.png" style="vertical-align: middle" width="40px"> <b>RedCode</b>: Risky Code Execution and Generation Benchmark for Code Agents</h1>  
+<h1 align="center"><img src="assets/RedCode-logo-512.png" style="vertical-align: middle" width="30px"> <b>RedCode</b>: Risky Code Execution and Generation Benchmark for Code Agents</h1>  
 
 <p align="center">
   📄 <a href="https://arxiv.org/abs/2411.07781"><b>[Paper]</b></a>
