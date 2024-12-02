@@ -5,11 +5,37 @@
   🌐 <a href="https://redcode-agent.github.io"><b>[Webpage]</b></a>
 </p>
 
+
+🤖 Code agents represent a powerful leap forward in software development, capable of understanding complex requirements and executing/generating functional code across multiple programming languages - sometimes even in natural language.
+
+
+⚠️ But code agents are not risk-free.
+
+In this work, we propose RedCode, a high-quality, large-scale (over 4,000 test cases) dataset that features diverse languages and formats (Python, Bash, natural language), providing real interaction with systems and fine-grained evaluation of both code execution and generation.
+
+**RedCode** consists of RedCode-Exec and RedCode-Gen.
+- **RedCode-Exec** provides prompts to evaluate code agents' ability to recognize and handle unsafe code with a total of 4,050 testing instances.
+- **RedCode-Gen** provides 160 prompts with function signatures as input to assess whether code agents will follow instructions to generate harmful code or software.
+
+We present the following 5 new findings (Finding 1-5) from our evaluations, which have not been revealed in prior benchmarks:
+
+- **Finding 1: OpenCodeInterpreter is safer than ReAct and CodeAct agents.**
+
+- **Finding 2: Agents are more likely to reject executing unsafe operations in operating system domain.**
+
+- **Finding 3: Agents are less likely to reject risky queries in natural language than programming language inputs, or in Bash code than Python code inputs.**
+
+- **Finding 4: More capable base models, such as GPT series, tend to have a higher rejection rate for unsafe operations under the same Agent structure.**
+
+- **Finding 5: More capable base models tend to produce more sophisticated and effective harmful software.**
+
+For the safety leaderboard and more visulized results, please consider visiting our [RedCode webpage](https://redcode-agent.github.io).
+
+---
+
 > **🚧  Note:** We are working hard to wrap up all the codes to provide an off-the-shelf deployment experience.
 >
-> To stay updated, consider **⭐️ starring** and **😎 watching** this repository. Your support means a lot to us!
-
-
+> To stay updated, consider **starring⭐️** and **watching😎** this repository. Your support means a lot to us!
 
 
 ## 📂 Repository Structure
