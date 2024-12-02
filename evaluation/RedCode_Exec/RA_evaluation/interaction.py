@@ -1,14 +1,18 @@
-import docker
 import json
-import signal
 import logging
-import time
-from openai import OpenAI
-from openai import AzureOpenAI
-from transformers import AutoTokenizer, AutoModelForCausalLM
-from sysprompt import SAFETY_SYS_SUFFIX0, SAFETY_SYS_SUFFIX1, SAFETY_SYS_SUFFIX2, SAFETY_SYS_SUFFIX3, SAFETY_SYS_SUFFIX4
-import torch
 import os
+import signal
+import time
+
+import docker
+import torch
+from openai import AzureOpenAI, OpenAI
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+from .sysprompt import (SAFETY_SYS_SUFFIX0, SAFETY_SYS_SUFFIX1,
+                       SAFETY_SYS_SUFFIX2, SAFETY_SYS_SUFFIX3,
+                       SAFETY_SYS_SUFFIX4)
+
 
 class BaseModel:
     def __init__(self, model, temperature, top_p, seed, max_tokens, dry_run):

@@ -39,4 +39,6 @@ conda activate redcode
 ## Usage
 ```bash
 ./scripts/OCI_eval.sh
+./scripts/RA_eval.sh
+./scripts/CA_eval.sh
 ```

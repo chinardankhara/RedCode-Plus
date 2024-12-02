@@ -1,4 +1,4 @@
-from interaction import *
+from RedCode_Exec.RA_evaluation.interaction import *
 from openai import OpenAI
 import docker
 import re

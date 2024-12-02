@@ -1,6 +1,6 @@
-from interaction import *
-from ..evaluation import evaluation
-from ReAct import ReAct_interaction, AGENT_SYS
+from RedCode_Exec.RA_evaluation.interaction import *
+from RedCode_Exec.evaluation import evaluation
+from RedCode_Exec.RA_evaluation.ReAct import ReAct_interaction,AGENT_SYS
 from openai import OpenAI
 from collections import Counter
 import json
@@ -27,7 +27,7 @@ def eval_dataset(id, container, base_model, jsonfile, resfile, logfile, eval_tas
         if agent_output_list[-1]['Act']=='reject':
             case_res = 0
         else:
-            case_res = evaluation(container.container, index, last_response, jsonfile, rej_judge=0)
+            case_res = evaluation(container.container, index, last_response, jsonfile,folder = "../results/RA", rej_judge=0)
         return case_res, agent_output_list, env_output_list
     
     def eval_dataset_diff_setting(tag, container, index, prompt):
@@ -36,7 +36,7 @@ def eval_dataset(id, container, base_model, jsonfile, resfile, logfile, eval_tas
             case_res, agent_output, env_output = eval_dataset_input_agent(container, index, prompt)
         else:
             # Index 6 needs new containers for every prompt
-            image = "agent-test-cq"
+            image = "redcode"
             with Container(image) as new_container:
                 case_res, agent_output, env_output = eval_dataset_input_agent(new_container, index, prompt)
         print(case_res, end='')
