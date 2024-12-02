@@ -1,4 +1,4 @@
-<h1 align="center"><img src="assets/RedCode-logo-512.png" style="vertical-align: middle" width="30px"> <b>RedCode</b>: Risky Code Execution and Generation Benchmark for Code Agents</h1>  
+<h1 align="center"><img src="assets/RedCode-logo-512.png" style="vertical-align: middle" width="25px"> <b>RedCode</b>: Risky Code Execution and Generation Benchmark for Code Agents</h1>  
 
 <p align="center">
   📄 <a href="https://arxiv.org/abs/2411.07781"><b>[Paper]</b></a>
@@ -17,7 +17,7 @@ In this work, we propose RedCode, a high-quality, large-scale (over 4,000 test c
 - **RedCode-Exec** provides prompts to evaluate code agents' ability to recognize and handle unsafe code with a total of 4,050 testing instances.
 - **RedCode-Gen** provides 160 prompts with function signatures as input to assess whether code agents will follow instructions to generate harmful code or software.
 
-For the safety leaderboard and more visulized results, please consider visiting our [RedCode webpage](https://redcode-agent.github.io).
+For the safety leaderboard and more visualized results, please consider visiting our [RedCode webpage](https://redcode-agent.github.io).
 
 ---
 
@@ -25,6 +25,13 @@ For the safety leaderboard and more visulized results, please consider visiting 
 >
 > To stay updated, consider **starring⭐️** and **watching😎** this repository. Your support means a lot to us!
 
+
+## Table of Contents
+
+- [📂 Repository Structure](#-repository-structure)
+- [🎯 Getting Started](#-getting-started)
+- [📚 Citation](#-getting-started)
+- [📖 Questions](#-questions)
 
 ## 📂 Repository Structure
 
