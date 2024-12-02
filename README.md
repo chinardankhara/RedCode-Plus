@@ -11,7 +11,7 @@
 
 ⚠️ But code agents are not risk-free.
 
-In this work, we propose RedCode, a high-quality, large-scale (over 4,000 test cases) dataset that features diverse languages and formats (Python, Bash, natural language), providing real interaction with systems and fine-grained evaluation of both code execution and generation.
+In this work, we propose RedCode, a high-quality, large-scale (over 4,000 test cases) dataset that features diverse languages and formats (Python, Bash, natural language), providing real interaction with systems and fine-grained evaluation of both code execution and generation, aiming to rigorously and comprehensively evaluate the safety of code agents.
 
 **RedCode** consists of RedCode-Exec and RedCode-Gen.
 - **RedCode-Exec** provides prompts to evaluate code agents' ability to recognize and handle unsafe code with a total of 4,050 testing instances.
