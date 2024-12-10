@@ -6,7 +6,8 @@ import time
 
 import docker
 import torch
-from openai import AzureOpenAI, OpenAI
+# from openai import AzureOpenAI, OpenAI
+import openai
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from .sysprompt import (SAFETY_SYS_SUFFIX0, SAFETY_SYS_SUFFIX1,
@@ -37,10 +38,10 @@ class BaseModel:
                 torch_dtype=torch.bfloat16,
                 device_map="auto"
             )
-        if model=='CodeLlama-7b-Instruct-hf':
-            self.client = OpenAI(base_url="http://localhost:7878/v1", api_key='a_demo_api_key')
-        if model=='CodeLlama-13b-Instruct-hf':
-            self.client = OpenAI(base_url="http://localhost:7879/v1", api_key='a_demo_api_key')
+        # if model=='CodeLlama-7b-Instruct-hf':
+        #     self.client = OpenAI(base_url="http://localhost:7878/v1", api_key='a_demo_api_key')
+        # if model=='CodeLlama-13b-Instruct-hf':
+        #     self.client = OpenAI(base_url="http://localhost:7879/v1", api_key='a_demo_api_key')
         if model=='meta-llama-3-8B-instruct':
             self.tokenizer = AutoTokenizer.from_pretrained("meta-llama/meta-llama-3-8B-instruct")
             self.llama3 = AutoModelForCausalLM.from_pretrained(
@@ -110,27 +111,14 @@ class BaseModel:
             api_key = os.environ['ANTHROPIC_API_KEY']
             self.client = anthropic.Anthropic(api_key=api_key)
 
-        if 'gpt' in model:
-            if model=='gpt-4o-2024-05-13':
-                api_key = os.environ['OPENAI_PROJ_API_KEY']
-                self.client = OpenAI(api_key=api_key)
-            elif model=='gpt-35-turbo':
-                deploymentName = 'gpt-35-turbo'
-                endpoint = 'redmond/interactive'
-
-                API_KEY = os.environ['OPENAI_AZURE_API_KEY']
-                API_VERSION = '2024-02-01'
-                BASE_URL = 'https://trapi.research.microsoft.com/' + endpoint 
-                DEPLOYMENT_ID = deploymentName
-
-                self.client = AzureOpenAI(
-                    api_key=API_KEY,
-                    api_version=API_VERSION,
-                    azure_endpoint=BASE_URL,
-                    azure_deployment=DEPLOYMENT_ID
-                )
-            else:
-                self.client = OpenAI(base_url="https://tnrllmproxy.azurewebsites.net/v1")
+        # if 'gpt' in model:
+        #     if model == 'gpt-4o':
+        #         api_key = os.environ['OPENAI_PROJ_API_KEY']
+        #         self.client = OpenAI(api_key=api_key)
+        #     elif model == 'gpt-35-turbo':
+        #         self.client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
+        #     else:
+        #         self.client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
 
     def generate_deepseek(self, messages):
         inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt").to(self.deepseek.device)
@@ -219,14 +207,16 @@ class BaseModel:
         if not system_prompt:
             while attempt < max_retries:
                 try:
-                    response = self.client.messages.create(
+                    response = openai.ChatCompletion.create(
                         model=self.model,
                         temperature=self.temperature,
                         top_p=self.top_p,
                         max_tokens=self.max_tokens,
                         messages=new_messages
                     )
-                    return response.content[0].text
+
+                    # Accessing the response content (text)
+                    return response['choices'][0]['message']['content']
                 except Exception as e:
                     attempt += 1
                     wait_time = backoff_factor * (2 ** attempt)
@@ -235,15 +225,17 @@ class BaseModel:
         else:
             while attempt < max_retries:
                 try:
-                    response = self.client.messages.create(
+                    response = openai.ChatCompletion.create(
                         model=self.model,
                         temperature=self.temperature,
                         top_p=self.top_p,
-                        system=system_prompt,
                         max_tokens=self.max_tokens,
                         messages=new_messages
                     )
-                    return response.content[0].text
+
+                    # Accessing the response content (text)
+                    return response['choices'][0]['message']['content']
+
                 except Exception as e:
                     attempt += 1
                     wait_time = backoff_factor * (2 ** attempt)

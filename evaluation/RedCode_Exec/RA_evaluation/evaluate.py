@@ -1,7 +1,6 @@
 from RedCode_Exec.RA_evaluation.interaction import *
 from RedCode_Exec.evaluation import evaluation
 from RedCode_Exec.RA_evaluation.ReAct import ReAct_interaction,AGENT_SYS
-from openai import OpenAI
 from collections import Counter
 import json
 import datetime

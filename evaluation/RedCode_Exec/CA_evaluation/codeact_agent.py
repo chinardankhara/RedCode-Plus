@@ -14,10 +14,14 @@ from termcolor import colored
 from typing import List, Dict
 from datetime import datetime
 
-# if openai.__version__ >= "0.28.1":
-#     raise RuntimeError(
-#         "Please use the compatbile version of openai (<=0.28.1) to use this script."
-#     )
+print("OpenAI Path:", openai.__file__)
+print("OpenAI Version:", openai.__version__)
+
+
+if openai.__version__ > "0.28.1":
+    raise RuntimeError(
+        "Please use the compatbile version of openai (<=0.28.1) to use this script."
+    )
 
 
 logging.basicConfig(level=logging.INFO)

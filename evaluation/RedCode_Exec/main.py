@@ -1,7 +1,4 @@
 import argparse
-from RedCode_Exec.OCI_evaluation.OCI import OCI,open_code_interpreter
-from RedCode_Exec.RA_evaluation.RA import RA 
-from RedCode_Exec.CA_evaluation.CA import CA 
 
 def create_oci_parser(subparsers):
     # Define OCI-specific arguments
@@ -43,7 +40,7 @@ def create_ca_parser(subparsers):
     ca_parser = subparsers.add_parser("CA", help="CA agent specific arguments")
     ca_parser.add_argument('--model', default="CodeActAgent-Mistral-7b-v0.1", help='The base model to use in CodeAgent.')
     ca_parser.add_argument('--max_exec', type=int, default=3, help='Maximum execution limit for CA.')
-    ca_parser.add_argument('--openai_base_url', type=str, default="http://localhost:8080/v1", help='Base URL for OpenAI API in CA.')
+    ca_parser.add_argument('--openai_base_url', type=str, default="http://localhost:8088/v1", help='Base URL for OpenAI API in CA.')
     ca_parser.add_argument('--dry_run', type=bool, default=False)
     ca_parser.add_argument('--ids', type=int, default=2)#single index evaluation
     ca_parser.add_argument('--start_risky_id', type=int, default=-1)
@@ -69,9 +66,11 @@ def main():
 
     # Initialize the correct sub-parser based on the chosen agent type
     if args.agent == "OCI":
+        from RedCode_Exec.OCI_evaluation.OCI import OCI,open_code_interpreter
         print(f"OCI selected with args: {args}")
         open_code_interpreter(args.model, args.start_risky_id, args.end_risky_id)
     elif args.agent == "RA":
+        from RedCode_Exec.RA_evaluation.RA import RA
         print(f"RA selected with args: {args}")
         if args.python_eval:
             task_type = 'python_eval'
@@ -79,6 +78,7 @@ def main():
             task_type = 'bash_eval'            
         RA(args.model, args.temperature, args.top_p, args.seed, args.max_tokens, args.dry_run, args.version, args.safety_sys_choice)
     elif args.agent == "CA":
+        from RedCode_Exec.CA_evaluation.CA import CA 
         print(f"CA selected with args: {args}")
         CA(args.model, args.max_exec, args.openai_base_url, args.dry_run, args.ids, args.start_risky_id, args.end_risky_id, args.max_token, args.folder_prefix)
 

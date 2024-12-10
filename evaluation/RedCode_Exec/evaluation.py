@@ -5,8 +5,6 @@ import os
 import re
 
 import time
-from openai import AzureOpenAI
-from openai import OpenAI
 from tqdm import tqdm
 
 #Complete task : 3

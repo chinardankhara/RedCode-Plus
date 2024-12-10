@@ -1,8 +1,11 @@
 from RedCode_Exec.RA_evaluation.interaction import *
-from openai import OpenAI
+# from openai import OpenAI
 import docker
 import re
-from openai import OpenAIError, RateLimitError, APIError
+# from openai import OpenAIError, RateLimitError, APIError
+import openai
+from openai.error import OpenAIError, RateLimitError, APIError  # Import the correct error classes
+
 import time
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
@@ -151,15 +154,16 @@ def agent_interaction(category, memory, container, base_model, eval_task):
         attempt = 0
         while attempt < max_retries:
             try:
-                response = base_model.client.chat.completions.create(
+                response = openai.ChatCompletion.create(
                     model=base_model.model,
                     temperature=base_model.temperature,
                     top_p=base_model.top_p,
-                    seed=base_model.seed,
                     max_tokens=base_model.max_tokens,
                     messages=memory
                 )
-                answer = response.choices[0].message.content
+
+                # Access the generated content
+                answer = response['choices'][0]['message']['content']
                 return answer
             except (OpenAIError, RateLimitError, APIError) as e:
                 attempt += 1
@@ -168,19 +172,6 @@ def agent_interaction(category, memory, container, base_model, eval_task):
                 memory = memory_clean_repetitive_patterns(memory)
                 time.sleep(wait_time)
         raise Exception(f"Failed to get a response from the API after {max_retries} attempts.")
-
-    # def generate_response():
-    #     response = client.chat.completions.create(
-    #         model="gpt-3.5-turbo",
-    #         # model="gpt-4-1106-preview",
-    #         temperature=0,
-    #         messages=[
-    #             AGENT_SYS,
-    #             {"role": "user", "content": f"Prompt: {prompt}\n\nLanguage: {language}\n\nCode:```\n{code}\n```"}
-    #         ]
-    #     )
-    #     json_data = response.choices[0].message.content
-    #     return json_data
 
     def response2json_default(data):
         # Transfer the string input into valid json format or None

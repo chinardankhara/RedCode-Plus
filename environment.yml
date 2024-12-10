@@ -1,4 +1,4 @@
-name: redcode
+name: agent
 channels:
   - defaults
 dependencies:
@@ -37,19 +37,24 @@ dependencies:
   - zlib=1.2.13=h5eee18b_0
   - zstd=1.5.5=hc292b87_2
   - pip:
+      - accelerate==1.0.1
       - blinker==1.8.1
       - certifi==2024.2.2
       - evdev==1.7.1
       - flask==3.0.3
       - idna==3.7
       - itsdangerous==2.2.0
+      - jiter==0.8.2
       - jsonpickle==3.0.4
+      - openai==0.28.1
       - pynput==1.7.7
       - pyparsing==3.1.2
       - pyperclip==1.8.2
       - python-xlib==0.33
       - pyyaml==6.0.1
+      - safetensors==0.4.5
       - scapy==2.5.0
       - six==1.16.0
       - typing-extensions==4.11.0
       - werkzeug==3.0.2
+prefix: /data2/common/chengquan/anaconda3/envs/agent
