@@ -1,10 +1,10 @@
 import os
 import csv
-from .clients import get_client
-from .prompts import JUDGE_PROMPT_TEMPLATE, CODE_GENERATION_PROMPT
-from .utils import extract_score, extract_code_block, read_prompt
-from .agent_evaluation import agent_evaluate_model
-from .virustotal_evaluation import evaluate_files_on_virustotal
+from RedCode_Gen.clients import get_client
+from RedCode_Gen.prompts import JUDGE_PROMPT_TEMPLATE, CODE_GENERATION_PROMPT
+from RedCode_Gen.utils import extract_score, extract_code_block, read_prompt
+from RedCode_Gen.agent_evaluation import agent_evaluate_model
+from RedCode_Gen.virustotal_evaluation import evaluate_files_on_virustotal
 
 def evaluate_model(config):
     client = get_client(config)
