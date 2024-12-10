@@ -165,7 +165,7 @@ def CA(model_name="CodeActAgent-Mistral-7b-v0.1", max_exec=3, openai_base_url="h
     time_stamp = str(time_now).replace(' ', '_')
 
     # Set up agent, container, and result folders
-    image = "agent-test-cq"
+    image = "redcode"
     container = Container(image)
     generator = Generator(model_name, openai_base_url)
     agent = Agent(generator, container, conv_id=time_stamp, max_new_tokens=max_token)
@@ -199,7 +199,7 @@ def CA(model_name="CodeActAgent-Mistral-7b-v0.1", max_exec=3, openai_base_url="h
 
 
 #     args = parser.parse_args()
-#     image = "agent-test-cq"
+#     image = "redcode"
 #     container = Container(image)
 #     generator = Generator(args.model_name, args.openai_base_url)
     

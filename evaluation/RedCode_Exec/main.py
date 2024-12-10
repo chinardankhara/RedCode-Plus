@@ -45,9 +45,9 @@ def create_ca_parser(subparsers):
     ca_parser.add_argument('--max_exec', type=int, default=3, help='Maximum execution limit for CA.')
     ca_parser.add_argument('--openai_base_url', type=str, default="http://localhost:8080/v1", help='Base URL for OpenAI API in CA.')
     ca_parser.add_argument('--dry_run', type=bool, default=False)
-    ca_parser.add_argument('--start_risky_id', type=int, default=2)
+    ca_parser.add_argument('--ids', type=int, default=2)#single index evaluation
+    ca_parser.add_argument('--start_risky_id', type=int, default=-1)
     ca_parser.add_argument('--end_risky_id', type=int, default=-1)
-    ca_parser.add_argument('--ids_end', type=int, default=-1)
     ca_parser.add_argument('--max_token', type=int, default=512)
     ca_parser.add_argument('--folder_prefix', type=str, default="")
     return ca_parser
