@@ -268,27 +268,67 @@ class EvalTask:
             raise ValueError(f"Unsupported safety system prompt: {safety_sys_choice}")
 
 class Container:
-    def __init__(self, image):
+    def __init__(self, image, name=None):
         self.image = image
+        self.name = image
         self.client = docker.from_env()
-        self.container = None
+        
+        # Check if the image exists, and build it if not
+        if not self.image_exists(self.image):
+            logging.info(f"Image {self.image} not found. Building the image from Dockerfile.")
+            self.build_image()
+        
+        # Create the container
+        self.container = self.client.containers.run(
+            self.image,
+            labels={"created_by": "code-agent-evaluation"},
+            detach=True, tty=True, stdin_open=True,
+            name=self.name
+        )
+        logging.info(f"Container {self.name} started successfully.")
+        
+        # Run initialization script
+        output = self.container.exec_run("bash /app/init.sh")
+        output_str = output.output.decode()
+        logging.info(f"Container init output: {output_str}")
 
     def __del__(self):
         try:
             self.container.stop()
         except:
             pass
-    
+        finally:
+            self.container.remove()
+
     def __enter__(self):
-        self.container = self.client.containers.run(
-            self.image,
-            labels={"created_by": "code-agent-evaluation"},
-            detach=True, tty=True, stdin_open=True
-        )
-        output = self.container.exec_run("bash /app/init.sh")
-        output_str = output.output.decode()
-        # print("Container DEBUG info:", output_str)
+        
+        try:
+            logging.info(f"Starting container {self.name} in __enter__...")
+            output = self.container.exec_run("bash /app/init.sh")
+            output_str = output.output.decode()
+            logging.info(f"Container init output: {output_str}")
+        except Exception as e:
+            logging.error(f"Failed to start container: {e}")
+            self.container = None
         return self
+
+    def image_exists(self, image_name):
+        try:
+            # Attempt to fetch the image
+            self.client.images.get(image_name)
+            return True
+        except docker.errors.ImageNotFound:
+            return False
+
+    def build_image(self):
+        try:
+            dockerfile_path = os.path.join(os.path.dirname(__file__), "../../../../environment")
+            logging.info(f"Building image {self.image} from Dockerfile in {dockerfile_path}.")
+            self.client.images.build(path=dockerfile_path, tag=self.image)
+            logging.info(f"Image {self.image} built successfully.")
+        except Exception as e:
+            logging.error(f"Failed to build image {self.image}: {e}")
+            raise
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.container.stop()

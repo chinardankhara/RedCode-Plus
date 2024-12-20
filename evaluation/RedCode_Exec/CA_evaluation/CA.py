@@ -170,14 +170,6 @@ def CA(model_name="CodeActAgent-Mistral-7b-v0.1", max_exec=3, openai_base_url="h
     generator = Generator(model_name, openai_base_url)
     agent = Agent(generator, container, conv_id=time_stamp, max_new_tokens=max_token)
 
-    # res_folder = os.path.join(f"results{folder_prefix}", model_name)
-    # log_folder = os.path.join(f"logs{folder_prefix}", model_name)
-
-    # os.makedirs(res_folder, exist_ok=True)
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # Evaluate datasets for each id
-    # Get the current file's directory
     current_file_path = os.path.dirname(os.path.abspath(__file__))
     dataset_base_path = os.path.join(current_file_path, '../../../dataset/RedCode-Exec')
 
@@ -186,59 +178,9 @@ def CA(model_name="CodeActAgent-Mistral-7b-v0.1", max_exec=3, openai_base_url="h
 
     
     for id in ids_list:
-        # resfile = os.path.join(res_folder, f'idx{id}_{time_stamp}.json')
-        # logfile = os.path.join(log_folder, f'idx{id}.json')
-        # jsonfile = f'../Trans_code/py2text_dataset_json/index{id}_30_codes_full.json'
-
         resfile = f'../results/CA/{time_stamp}.json'
         logfile = f'../results/CA/log/RA_log_{time_stamp}.json'
         jsonfile = os.path.join(dataset_base_path, f'py2text_dataset_json/index{id}_30_codes_full.json')
 
         eval_dataset(id, agent, jsonfile, resfile, logfile, max_exec, dry_run)
 
-
-# if __name__== "__main__":
-#     parser = argparse.ArgumentParser(description='Select base model for CodeAgent and set parameters.')
-#     parser.add_argument('--model_name',default= "CodeActAgent-Mistral-7b-v0.1", help='The base model to use in CodeAgent.')
-#     parser.add_argument('--max_exec', type=int, default=3)
-#     parser.add_argument('--openai_base_url', type=str, default="http://localhost:8088/v1")
-#     parser.add_argument('--dry_run', type=bool, default=False)
-#     parser.add_argument('--ids', type=int, default=2)
-#     parser.add_argument('--ids_start', type=int, default=-1)
-#     parser.add_argument('--ids_end', type=int, default=-1)
-#     parser.add_argument('--max_token', type=int, default=512)
-#     parser.add_argument('--folder_prefix', type=str, default="")
-
-
-#     args = parser.parse_args()
-#     image = "redcode"
-#     container = Container(image)
-#     generator = Generator(args.model_name, args.openai_base_url)
-    
-#     ids=[args.ids]
-#     if args.ids_start>0 and args.ids_end>0:
-#         ids=list(range(args.ids_start, args.ids_end))
-#     print("eval ids", ids)
-
-#     time_now = datetime.datetime.now()+datetime.timedelta(hours=8)
-#     time_stamp = str(time_now).replace(' ', '_')
-
-#     agent = Agent(generator,container, conv_id=time_stamp,max_new_tokens=args.max_token)
-#     res_folder= os.path.join(f"results{args.folder_prefix}", args.model_name)
-#     log_folder= os.path.join(f"logs{args.folder_prefix}", args.model_name)
-    
-#     os.makedirs(res_folder, exist_ok=True)
-#     os.makedirs(log_folder, exist_ok=True)
-
-
-#     for id in ids:
-
-#         resfile = os.path.join(res_folder, f'idx{id}_{time_stamp}.json')
-#         logfile = os.path.join(log_folder, f'idx{id}.json')
-        
-         
-#         jsonfile = f'../Trans_code/py2text_dataset_json/index{id}_30_codes_full.json'
-        
-    
-
-#         eval_dataset(id, agent, jsonfile, resfile, logfile, args.max_exec, args.dry_run)
