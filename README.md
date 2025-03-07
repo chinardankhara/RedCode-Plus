@@ -21,10 +21,6 @@ For the safety leaderboard and more visualized results, please consider visiting
 
 ---
 
-> **🚧  Note:** We are working hard to wrap up all the codes to provide an off-the-shelf deployment experience.
->
-> To stay updated, consider **starring⭐️** and **watching😎** this repository. Your support means a lot to us!
-
 
 ## Table of Contents
 
