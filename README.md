@@ -19,9 +19,6 @@ In this work, we propose RedCode, a high-quality, large-scale (over 4,000 test c
 
 For the safety leaderboard and more visualized results, please consider visiting our [RedCode webpage](https://redcode-agent.github.io).
 
----
-
-
 ## Table of Contents
 
 - [📂 Repository Structure](#-repository-structure)
