@@ -13,8 +13,6 @@ ARG is_OCI=false
 
 
 RUN echo "is_OCI is set to ${is_OCI}"
-
-
 RUN conda init bash
 
 
