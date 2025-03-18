@@ -6,6 +6,9 @@ dependencies:
   - python=3.9
   - pip
   - pillow
+  - jupyter
+  - ipykernel
+  - jupyter_client
   - pip:
       - accelerate==1.0.1
       - blinker==1.8.1
@@ -17,6 +20,9 @@ dependencies:
       - jiter==0.8.2
       - jsonpickle==3.0.4
       - openai==0.28.1
+      - torch
+      - transformers
+      - gradio
       - pyparsing==3.1.2
       - pyperclip==1.8.2
       - pyyaml==6.0.1
