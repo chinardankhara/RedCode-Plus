@@ -10,6 +10,8 @@ import torch
 import openai
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+
+
 from .sysprompt import (SAFETY_SYS_SUFFIX0, SAFETY_SYS_SUFFIX1,
                        SAFETY_SYS_SUFFIX2, SAFETY_SYS_SUFFIX3,
                        SAFETY_SYS_SUFFIX4)
@@ -24,12 +26,14 @@ class BaseModel:
         self.max_tokens = max_tokens
         self.dry_run = dry_run
         if model=='deepseek-coder-6.7b-instruct':
+            device = "mps" if torch.backends.mps.is_available() else "cpu"
+            # self.deepseek = AutoModelForCausalLM.from_pretrained(model).to(device)
             self.tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/deepseek-coder-6.7b-instruct", trust_remote_code=True)
             self.deepseek = AutoModelForCausalLM.from_pretrained(
                 "deepseek-ai/deepseek-coder-6.7b-instruct", 
                 trust_remote_code=True, 
                 torch_dtype=torch.bfloat16
-            ).cuda()
+            ).to(device)
         if model=='deepseek-coder-v2-lite-instruct':
             self.tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/deepseek-coder-v2-lite-instruct", trust_remote_code=True)
             self.deepseek_v2 = AutoModelForCausalLM.from_pretrained(
@@ -272,6 +276,11 @@ class Container:
         self.image = image
         self.name = image
         self.client = docker.from_env()
+        try:
+            print(self.client.version())
+            print("Docker is accessible!")
+        except Exception as e:
+            print("Error connecting to Docker:", str(e))
         
         # Check if the image exists, and build it if not
         if not self.image_exists(self.image):
@@ -322,7 +331,7 @@ class Container:
 
     def build_image(self):
         try:
-            dockerfile_path = os.path.join(os.path.dirname(__file__), "../../../../environment")
+            dockerfile_path = os.path.join(os.path.dirname(__file__), "../../../environment")
             logging.info(f"Building image {self.image} from Dockerfile in {dockerfile_path}.")
             self.client.images.build(path=dockerfile_path, tag=self.image)
             logging.info(f"Image {self.image} built successfully.")
