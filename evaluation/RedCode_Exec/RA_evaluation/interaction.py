@@ -25,7 +25,7 @@ class BaseModel:
         self.seed = seed
         self.max_tokens = max_tokens
         self.dry_run = dry_run
-        self.hf_token = "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"
+        self.hf_token = #put token here
 
         if model=='deepseek-coder-6.7b-instruct':
             device = "mps" if torch.backends.mps.is_available() else "cpu"
