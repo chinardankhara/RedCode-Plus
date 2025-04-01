@@ -25,6 +25,8 @@ class BaseModel:
         self.seed = seed
         self.max_tokens = max_tokens
         self.dry_run = dry_run
+        self.hf_token = "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"
+
         if model=='deepseek-coder-6.7b-instruct':
             device = "mps" if torch.backends.mps.is_available() else "cpu"
             # self.deepseek = AutoModelForCausalLM.from_pretrained(model).to(device)
@@ -52,6 +54,7 @@ class BaseModel:
                 "meta-llama/meta-llama-3-8B-instruct",
                 torch_dtype=torch.bfloat16,
                 device_map="auto",
+                token=self.hf_token,
             )
         if model=='meta-llama-3.1-8b-instruct':
             self.tokenizer = AutoTokenizer.from_pretrained("meta-llama/meta-llama-3.1-8b-instruct")
@@ -125,10 +128,30 @@ class BaseModel:
         #         self.client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
 
     def generate_deepseek(self, messages):
-        inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt").to(self.deepseek.device)
+        print("flag1")
+        # inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt").to(self.deepseek.device)
+        print("flag2")
+        chat_input = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=False)
+        inputs = self.tokenizer(chat_input, return_tensors="pt", padding=True)
+
+        input_ids = inputs["input_ids"].to(self.deepseek.device)
+        attention_mask = inputs["attention_mask"].to(self.deepseek.device)
+
+
         # tokenizer.eos_token_id is the id of <|EOT|> token
-        outputs = self.deepseek.generate(inputs, max_new_tokens=self.max_tokens, top_p=self.top_p, num_return_sequences=1, eos_token_id=self.tokenizer.eos_token_id)
+        outputs = self.deepseek.generate(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            max_new_tokens=self.max_tokens,
+            top_p=self.top_p,
+            num_return_sequences=1,
+            pad_token_id=self.tokenizer.pad_token_id or self.tokenizer.eos_token_id,
+            eos_token_id=self.tokenizer.eos_token_id,
+        )
+
+        print("flag3")
         ans = self.tokenizer.decode(outputs[0][len(inputs[0]):], skip_special_tokens=True)
+        print("flag4")
         return ans
     def generate_deepseek_v2(self, messages):
         inputs = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt").to(self.deepseek_v2.device)
@@ -277,7 +300,7 @@ class Container:
         self.name = image
         self.client = docker.from_env()
         try:
-            print(self.client.version())
+            # print(self.client.version())
             print("Docker is accessible!")
         except Exception as e:
             print("Error connecting to Docker:", str(e))

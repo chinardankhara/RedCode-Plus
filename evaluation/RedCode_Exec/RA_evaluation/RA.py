@@ -22,12 +22,15 @@ def RA(model, temperature=0, top_p=1.0, seed=998244353, max_tokens=1024, dry_run
 
     # Define task ids based on task type
     if task_type == 'python_eval':
-        ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 18, 19, 20, 22, 23, 24, 25, 11, 16, 17, 21, 10]
+        # ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 18, 19, 20, 22, 23, 24, 25, 11, 16, 17, 21, 10]
+        ids = [1]
     elif task_type == 'bash_eval':
-        ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 20, 21, 22, 23, 25]
+        # ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 20, 21, 22, 23, 25]
+        ids = [1]
 
     # Initialize the base model and eval task
     base_model = BaseModel(model=model, temperature=temperature, top_p=top_p, seed=seed, max_tokens=max_tokens, dry_run=dry_run)
+    
     eval_task = EvalTask(task=task_type.split('_')[0], version=version, safety_sys_choice=safety_sys_choice)
 
     # Loop through each task ID and evaluate dataset
@@ -46,6 +49,6 @@ def RA(model, temperature=0, top_p=1.0, seed=998244353, max_tokens=1024, dry_run
                 jsonfile = os.path.join(dataset_base_path, f'bash2text_dataset_json/index{id}_30_codes_full_upd.json')
             else:
                 raise ValueError(f"Invalid task type: {task_type}")
-
+            print("here")
             # Evaluate the dataset
             eval_dataset(id, container, base_model, jsonfile, resfile, logfile, eval_task)

@@ -134,19 +134,20 @@ def agent_interaction(category, memory, container, base_model, eval_task):
             return cleaned_memory
     
         if base_model.model=='deepseek-coder-6.7b-instruct':
+            print("here2.1.1.1")
             return base_model.generate_deepseek(memory)
         
         if base_model.model=='deepseek-coder-v2-lite-instruct':
             return base_model.generate_deepseek_v2(memory)
         
-        if base_model.model=='meta-llama-3-8B-instruct':
-            return base_model.generate_llama3(memory)
+        # if base_model.model=='meta-llama-3-8B-instruct':
+        #     return base_model.generate_llama3(memory)
         
-        if base_model.model=='llama-2-7b-chat-hf':
-            return base_model.generate_llama2(memory)
+        # if base_model.model=='llama-2-7b-chat-hf':
+        #     return base_model.generate_llama2(memory)
         
-        if base_model.model=='llama-2-13b-chat-hf':
-            return base_model.generate_llama2(memory)
+        # if base_model.model=='llama-2-13b-chat-hf':
+        #     return base_model.generate_llama2(memory)
 
         if base_model.model=='gemma-2-9b-it':
             return base_model.generate_gemma2(memory)
@@ -231,7 +232,9 @@ def agent_interaction(category, memory, container, base_model, eval_task):
         for _ in range(max_attempts):
             if "codellama" not in base_model.model.lower() and _ > max_attempts//2:
                 memory.append(FOLLOW_SYS)
+            print("here2.1.1")
             data = generate_response(memory)
+            print(data)
             print('@Memory:',json.dumps(memory, indent=4))
             print('@Response:',repr(data))
             try:
@@ -312,6 +315,7 @@ def agent_interaction(category, memory, container, base_model, eval_task):
     timeout = 15 if category!=21 else 60
 
     if json_interaction():
+        print(json_response['Act'])
         if json_response['Act']=='execute':
             language = json_response['Language']
             code = json_response['Code']
@@ -361,19 +365,22 @@ def ReAct_interaction(category, prompt, container, base_model, eval_task):
                 AGENT_SYS,
                 {"role": "user", "content": prompt}
             ]
-    MAX_INTERACTION_ROUNDS = 8
+    MAX_INTERACTION_ROUNDS = 1
 
     for _ in range(MAX_INTERACTION_ROUNDS):
+        print("here2.1")
         agent_output, env_output = agent_interaction(category, memory, container, base_model, eval_task)
+        print("here2.2")
         memory.append({"role": "assistant", "content": str(agent_output)})
         if (env_output!=None and len(env_output) > 800):
             env_output_to_agent = env_output[:790]+"\n[truncated due to the context length limitation]"
         else:
             env_output_to_agent = env_output
+        print("here2.3")
         memory.append({"role": "user", "content": f"Environment observation:\n{env_output_to_agent}"})
         json_response_list.append(agent_output)
         exec_response_list.append(env_output)
         if agent_output['Act']=='reject' or agent_output['Act']=='finish':
             break
-
+    print("here2.4")
     return [json_response_list, exec_response_list]
