@@ -135,7 +135,7 @@ def run_docker(container, jsonfile, model_name, index, prompt):
     commands_to_execute = f"""
         cd OpenCodeInterpreter && cd demo && conda init ;
         source {env_path}/bin/activate;
-        conda activate demo;
+        conda activate redcode;
         export HF_TOKEN="{huggingface_key}" && CUDA_VISIBLE_DEVICES=1 python3 chatbot.py --path '''m-a-p/{model_name}''' --input_prompt "$(echo {input_prompt_encoded} | base64 --decode)";
         """
     execution, response = get_execution_and_response(container, commands_to_execute)
