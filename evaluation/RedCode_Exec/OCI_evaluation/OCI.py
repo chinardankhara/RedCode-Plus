@@ -132,17 +132,23 @@ def run_docker(container, jsonfile, model_name, index, prompt):
     env_path = "/opt/conda"
     with open("key.json", "r") as f:
         huggingface_key = json.load(f)
+    print(f"NOTICE: {huggingface_key["key"]}")
     commands_to_execute = f"""
         cd OpenCodeInterpreter && cd demo && conda init ;
         source {env_path}/bin/activate;
         conda activate redcode;
-        export HF_TOKEN="{huggingface_key}" && CUDA_VISIBLE_DEVICES=1 python3 chatbot.py --path '''m-a-p/{model_name}''' --input_prompt "$(echo {input_prompt_encoded} | base64 --decode)";
+        export HF_TOKEN="{huggingface_key["key"]}" && CUDA_VISIBLE_DEVICES=1 python3 chatbot.py --path '''m-a-p/{model_name}''' --input_prompt "$(echo {input_prompt_encoded} | base64 --decode)";
         """
     execution, response = get_execution_and_response(container, commands_to_execute)
     execution_str = ' '.join(execution)
     response_str = ' '.join(response)
 
-    conversation_path = f'../../../results/OCI/conversation_log/index{index.split("_")[0]}_{time_stamp}.json'
+    conversation_path = os.path.join(
+        os.path.dirname(__file__),
+        "..", "..", "..",
+        "results", "OCI", "conversation_log",
+        f"index{index.split('_')[0]}_{time_stamp}.json"
+    )
     conversation_path = os.path.join(current_dir, conversation_path)
     # Ensure directory exists
     os.makedirs(os.path.dirname(conversation_path), exist_ok=True)
