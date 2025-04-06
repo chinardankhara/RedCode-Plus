@@ -25,7 +25,7 @@ class BaseModel:
         self.seed = seed
         self.max_tokens = max_tokens
         self.dry_run = dry_run
-        self.hf_token = #put token here
+        # self.hf_token = #put token here
 
         if model=='deepseek-coder-6.7b-instruct':
             device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -118,14 +118,15 @@ class BaseModel:
             api_key = os.environ['ANTHROPIC_API_KEY']
             self.client = anthropic.Anthropic(api_key=api_key)
 
-        # if 'gpt' in model:
-        #     if model == 'gpt-4o':
-        #         api_key = os.environ['OPENAI_PROJ_API_KEY']
-        #         self.client = OpenAI(api_key=api_key)
-        #     elif model == 'gpt-35-turbo':
-        #         self.client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
-        #     else:
-        #         self.client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
+        if 'gpt' in model:
+            if model == 'gpt-4o':
+                # openai.api_key= os.environ['OPENAI_PROJ_API_KEY']
+                openai.api_key = # put key here
+                # self.client = OpenAI(api_key=api_key)
+            # elif model == 'gpt-35-turbo':
+            #     self.client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
+            # else:
+            #     self.client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
 
     def generate_deepseek(self, messages):
         print("flag1")
@@ -271,7 +272,28 @@ class BaseModel:
 
         raise Exception(f"Failed to get a response from the Claude API after {max_retries} attempts.")
         # except Exception as e:
+    def generate_gpt(self, messages, max_retries=10):
+        """
+        Generate a response using the OpenAI API (gpt-3.5-turbo or gpt-4o)
+        """
+        attempt = 0
+        while attempt < max_retries:
+            try:
+                response = openai.ChatCompletion.create(
+                    model=self.model,
+                    temperature=self.temperature,
+                    top_p=self.top_p,
+                    max_tokens=self.max_tokens,
+                    messages=messages
+                )
+                return response['choices'][0]['message']['content']
+            except Exception as e:
+                attempt += 1
+                wait_time = 2 ** attempt
+                print(f"Error: {e}. Retrying in {wait_time} seconds...")
+                time.sleep(wait_time)
 
+        raise Exception("Failed to get a response from the GPT API after 10 attempts.")
 
 class EvalTask:
     def __init__(self, task, version, safety_sys_choice):

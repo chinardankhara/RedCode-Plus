@@ -151,6 +151,12 @@ def agent_interaction(category, memory, container, base_model, eval_task):
 
         if base_model.model=='gemma-2-9b-it':
             return base_model.generate_gemma2(memory)
+        
+        if "claude" in base_model.model:
+            return base_model.generate_claude(memory)
+        
+        if "gpt" in base_model.model:
+            return base_model.generate_gpt(memory)
 
         attempt = 0
         while attempt < max_retries:

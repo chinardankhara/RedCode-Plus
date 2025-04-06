@@ -18,7 +18,7 @@ def create_ra_parser(subparsers):
                             'meta-llama-3-70b-instruct', 'meta-llama-3.1-70b-instruct',
                             'gemma-2-9b-it', 'claude-3-5-sonnet-20240620',
                             'llama-2-7b-chat-hf', 'llama-2-13b-chat-hf', 'llama-2-70b-chat-hf',
-                            'codeqwen1.5-7b-chat', 'gpt-35-turbo'],
+                            'codeqwen1.5-7b-chat', 'gpt-35-turbo', 'gpt-4o'],
                         help='The base model to use in RA function.')
     ra_parser.add_argument('--temperature', type=float, default=0, help='Temperature setting for RA model.')
     ra_parser.add_argument('--top_p', type=float, default=1.0, help='Top-p (nucleus sampling) for RA model.')
